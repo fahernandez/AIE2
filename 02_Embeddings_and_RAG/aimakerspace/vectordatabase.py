@@ -3,6 +3,13 @@ from collections import defaultdict
 from typing import List, Tuple, Callable
 from aimakerspace.openai_utils.embedding import EmbeddingModel
 import asyncio
+from enum import Enum
+
+
+class DistanceType(Enum):
+    """Enum for supported distance measures in vector similarity search."""
+    COSINE_SIMILARITY = "cosine_similarity"
+    EUCLIDEAN_DISTANCE = "euclidean_distance"
 
 
 def cosine_similarity(vector_a: np.array, vector_b: np.array) -> float:
@@ -12,8 +19,12 @@ def cosine_similarity(vector_a: np.array, vector_b: np.array) -> float:
     norm_b = np.linalg.norm(vector_b)
     return dot_product / (norm_a * norm_b)
 
+def euclidean_distance(vector_a: np.array, vector_b: np.array) -> float:
+    """Computes the euclidean distance between two vectors."""
+    return np.linalg.norm(vector_a - vector_b)
 
 class VectorDatabase:
+    
     def __init__(self, embedding_model: EmbeddingModel = None):
         self.vectors = defaultdict(np.array)
         self.embedding_model = embedding_model or EmbeddingModel()
@@ -25,19 +36,29 @@ class VectorDatabase:
         self,
         query_vector: np.array,
         k: int,
-        distance_measure: Callable = cosine_similarity,
+        distance_measure: DistanceType = DistanceType.COSINE_SIMILARITY,
     ) -> List[Tuple[str, float]]:
-        scores = [
-            (key, distance_measure(query_vector, vector))
-            for key, vector in self.vectors.items()
-        ]
-        return sorted(scores, key=lambda x: x[1], reverse=True)[:k]
+        if distance_measure == DistanceType.COSINE_SIMILARITY:
+            scores = [
+                (key, cosine_similarity(query_vector, vector))
+                for key, vector in self.vectors.items()
+            ]
+            return sorted(scores, key=lambda x: x[1], reverse=True)[:k]
+        elif distance_measure == DistanceType.EUCLIDEAN_DISTANCE:
+            scores = [
+                (key, euclidean_distance(query_vector, vector))
+                for key, vector in self.vectors.items()
+            ]
+            return sorted(scores, key=lambda x: x[1], reverse=False)[:k]
+        else:
+            raise ValueError(f"Unsupported distance measure: {distance_measure}")
+
 
     def search_by_text(
         self,
         query_text: str,
         k: int,
-        distance_measure: Callable = cosine_similarity,
+        distance_measure: DistanceType = DistanceType.COSINE_SIMILARITY,
         return_as_text: bool = False,
     ) -> List[Tuple[str, float]]:
         query_vector = self.embedding_model.get_embedding(query_text)
