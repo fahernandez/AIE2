@@ -83,13 +83,23 @@ Build a LangGraph Graph to "use" your application.
 
 Do this by creating a Simple Agent that can make API calls to the 🤖Agent Node above through the A2A protocol. 
 
+#### Answer
+The LangGraph Graph can be found at `app/simple_a2a_agent.py`
+
 ### ❓ Question #1:
 
 What are the core components of an `AgentCard`?
 
+#### Answer
+An AgentCard is a structured metadata profile that describes an AI agent’s identity and capabilities within the A2A protocol. It includes basic information such as the agent’s name, description, endpoint URL, and version, as well as the types of input and output content it supports. Additionally, it outlines the agent’s functional abilities through a capabilities object (e.g., support for streaming and push notifications) and a list of skills, each detailing a specific area of expertise with identifiers, descriptions, tags, and example queries. This comprehensive summary allows other systems to easily discover and interact with the agent based on its declared features and supported tasks.
+
 ### ❓ Question #2:
 
 Why is A2A (and other such protocols) important in your own words?
+
+#### Answer
+A2A and similar protocols are important because they provide a standardized way to define and communicate an agent’s capabilities and interface. Without such standards, APIs can vary widely in structure, making integration and interoperability difficult and requiring custom solutions for each case. Standardization enables easier discovery—by publishing public and private agent cards, others can quickly understand what an agent can do without needing access to its internal implementation. This promotes transparency, reusability, and more seamless collaboration between different agents and systems.
+
 
 ### 🚧 Advanced Build:
 
