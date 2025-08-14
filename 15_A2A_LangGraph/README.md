@@ -100,7 +100,6 @@ Why is A2A (and other such protocols) important in your own words?
 #### Answer
 A2A and similar protocols are important because they provide a standardized way to define and communicate an agent’s capabilities and interface. Without such standards, APIs can vary widely in structure, making integration and interoperability difficult and requiring custom solutions for each case. Standardization enables easier discovery—by publishing public and private agent cards, others can quickly understand what an agent can do without needing access to its internal implementation. This promotes transparency, reusability, and more seamless collaboration between different agents and systems.
 
-
 ### 🚧 Advanced Build:
 
 <details>
